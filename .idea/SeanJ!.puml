@@ -1,0 +1,49 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+:Customer browses channels;
+if (Subscribe?) then (Yes)
+    :Customer subscribes to Producer's channel;
+else (No)
+    :Customer does not subscribe;
+endif
+
+:Producer decides to upload a video;
+if (Upload Video?) then (Yes)
+    :Producer uploads a video;
+    :Producer notifies subscribers;
+    if (Customer is subscribed?) then (Yes)
+        :Customer receives notification;
+    else (No)
+        :Customer does not receive notification;
+    endif
+else (No)
+    :Producer does not upload a video;
+    :Customer does not receive notification;
+endif
+
+:Customer watches the video;
+:Increase video view count;
+
+fork
+    if (Like?) then (Yes)
+        :Customer likes the video;
+        :Increase like count;
+    endif
+fork again
+    if (Dislike?) then (Yes)
+        :Customer dislikes the video;
+        :Increase dislike count;
+    endif
+fork again
+    if (Comment?) then (Yes)
+        :Customer writes a comment;
+        :Add comment to video metadata;
+    endif
+end fork
+
+stop
+
+@enduml
