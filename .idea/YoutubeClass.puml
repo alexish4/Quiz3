@@ -1,0 +1,114 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class MediaPlayer {
+    - State state
+    - String icon
+    - int volumeStrength
+    - Video video
+
+    + void setState(State state)
+    + State getState()
+    + String getIcon()
+    + void setIcon()
+    + Video getVideo()
+    + void setVideo(Video video)
+    + void play()
+    + void pause()
+    + void increaseVolume()
+    + void decreaseVolume()
+    + void mute()
+    + void unmute()
+    + void displayComments()
+}
+
+interface State {
+    void pause(MediaPlayer player)
+    void play(MediaPlayer player)
+}
+
+class PlayingState {
+    + void pause(MediaPlayer player)
+    + void play(MediaPlayer player)
+}
+
+class PausedState {
+    + void pause(MediaPlayer player)
+    + void play(MediaPlayer player)
+}
+
+class User {
+    - List<Video> videos
+    - List<User> subscribers
+    - List<User> subscribedChannels
+    - String channelName
+    - Video latestVideo
+    - MediaPlayer mediaPlayer
+
+    + User(String channelName)
+
+    + void uploadVideo(Video video)
+    + void deleteVideo(Video video)
+    + void subscribe(Channel channel)
+    + void unsubscribe(Channel channel)
+    + void addSubscriber(Channel channel)
+    + void removeSubscriber(Channel channel)
+    + void notifyLatestVideo()
+    + void watch(Video video)
+    + void writeComment(Video video, String commentContent)
+}
+
+class GuestUser {
+    + void watch(Video video)
+}
+
+class Video {
+    - int viewCount
+    - String videoTitle
+    - int likesCount
+    - int dislikesCount
+    - double duration
+    - Map<int, String> comments
+    - int videoID
+    - String timeStamp
+
+    + Video(String videoTitle)
+    + int getViewCount()
+    + void increaseViewCountByOne()
+    + int getLikeCounts()
+    + void increaseLikesCountByOne()
+    + int getDislikesCounts()
+    + void increaseDislikesByOne()
+    + double getDuration()
+    + int getVideoID()
+    + void setVideoID(int videoID)
+    + void addComment(String commentContent)
+    + void deleteComment(int commentID)
+}
+
+class Server {
+    - List<User> users
+    - List<Video> videos
+    - List<Video> trendingVideos
+    - Map<Integer, Video> cacheByID
+    - Map<String, Video> cacheByTitle
+
+    + void handleTrendingVideos()
+    + void registerUser()
+    + void unregisterUser()
+    + Video searchByID(Integer videoID)
+    + Video searchByTitle(String videoTitle)
+}
+
+User *-- Video : "0...*"
+Server *-- Video : "0...*"
+Server *-- User : "0...*"
+
+MediaPlayer o-- State
+State <-- PlayingState
+State <-- PausedState
+
+User o-- MediaPlayer : "1"
+GuestUser o-- MediaPlayer : "1"
+
+@enduml
